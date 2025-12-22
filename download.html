@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download II OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #000000; /* Fully black */
+      --text-light: #ffffff;
+      --accent-green: #00ff66;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: clamp(28px, 8vw, 48px);
+      margin-bottom: 2rem;
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+    p {
+      font-size: clamp(16px, 4vw, 18px);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    #bitcoin-address {
+      font-size: clamp(18px, 5vw, 20px);
+      font-weight: 700;
+      color: var(--text-light);
+      cursor: pointer;
+      border-bottom: 2px solid var(--accent-green);
+      padding-bottom: 2px;
+      display: inline-block;
+      transition: color 0.2s;
+    }
+    #bitcoin-address:hover {
+      color: var(--accent-green);
+    }
+    .download-link {
+        margin-top: 30px;
+    }
+    .home-link {
+        margin-top: 40px;
+        display: block;
+        color: var(--text-light);
+        opacity: 0.7;
+        font-size: 14px;
+        text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank you for downloading II25!</h1>
+    <p>Your download should start shortly. If it doesn't, please click the link below.</p>
+
+    <div class="download-link">
+        <a href="https://github.com/jusmichael/II/raw/f4562ceb61a2d04a7fbceec8abb9e99bc46be75d/ii25_dec_1.iso" download="ii25_dec_1.iso" style="color: var(--accent-green); text-decoration: none; font-size: 24px; font-weight: 600;">Restart Download</a>
+    </div>
+
+    <p style="margin-top: 4rem;">
+      Donate via Bitcoin if you want to support our work:
+    </p>
+    <strong id="bitcoin-address" data-address="bc1qq6epu2rhj6f4e74ry8zaa2479lt72sr67zyvg6" title="Click to copy full address">bc1qq6e...yvg6</strong>
+    
+    <a href="index.html" class="home-link">← Back to IIntegre Home</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Automatically trigger download
+        const downloadLink = document.querySelector('.download-link a');
+        if (downloadLink) {
+            // Use window.location to trigger download navigation
+            window.location.href = downloadLink.href;
+        }
+
+        // Bitcoin Address Copy Handler (Duplicated logic from script.js, necessary for standalone page)
+        const bitcoinAddressElement = document.getElementById('bitcoin-address');
+        if (bitcoinAddressElement) {
+            const fullAddress = bitcoinAddressElement.getAttribute('data-address');
+            
+            bitcoinAddressElement.addEventListener('click', () => {
+                if (navigator.clipboard && fullAddress) {
+                    navigator.clipboard.writeText(fullAddress).then(() => {
+                        const originalText = bitcoinAddressElement.textContent;
+                        bitcoinAddressElement.textContent = 'Copied!';
+                        setTimeout(() => {
+                            bitcoinAddressElement.textContent = originalText;
+                        }, 1500);
+                    }).catch(err => {
+                        console.error('Could not copy text: ', err);
+                        alert(`Could not copy address automatically. Please copy manually: ${fullAddress}`);
+                    });
+                }
+            });
+        }
+    });
+  </script>
+</body>
+</html>
+
