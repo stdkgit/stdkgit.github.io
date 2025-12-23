@@ -8,23 +8,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=stack" />
 <style>
-  /* Overlay style */
   #consent-overlay {
     position: fixed;
     top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.6);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 10000;
     flex-direction: column;
     gap: 1rem;
-    pointer-events: none;
   }
   #consent-overlay div {
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     padding: 1rem 2rem;
     border-radius: 8px;
-    pointer-events: all;
     text-align: center;
     font-family:'Space Grotesk', sans-serif;
     color: white;
@@ -39,7 +37,6 @@
   }
   #accept-btn { background:#00ff66; color:#000; }
   #decline-btn { background:#ff3300; color:#fff; }
-  body.blur { filter: blur(3px); } /* less blur */
 </style>
 <script type="module">
 let analytics;
@@ -59,7 +56,6 @@ function initFirebaseAnalytics() {
       const app = initializeApp(firebaseConfig);
       analytics = getAnalytics(app);
 
-      // Hook download link after consent
       const downloadLink = document.querySelector('.button-download-part');
       if (downloadLink) {
         downloadLink.addEventListener('click', () => {
@@ -82,8 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (triggered) return;
     triggered = true;
 
-    document.body.classList.add('blur');
-
     const overlay = document.createElement('div');
     overlay.id = 'consent-overlay';
     overlay.innerHTML = `
@@ -100,21 +94,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('accept-btn').addEventListener('click', () => {
       localStorage.setItem('iintegreConsent', 'accepted');
       overlay.remove();
-      document.body.classList.remove('blur');
-      initFirebaseAnalytics(); // Only initialize after user accepts
+      initFirebaseAnalytics();
     });
 
     document.getElementById('decline-btn').addEventListener('click', () => {
       localStorage.setItem('iintegreConsent', 'declined');
       overlay.remove();
-      document.body.classList.remove('blur');
     });
   }
 
+  // Show overlay after 5 seconds or first scroll
   setTimeout(showOverlay, 5000);
   window.addEventListener('scroll', showOverlay, { once:true });
 
-  // Intercept navigation links if no choice yet
+  // Intercept all link clicks if no choice yet
   document.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', e => {
       if (!localStorage.getItem('iintegreConsent')) {
