@@ -8,142 +8,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=stack" />
 
-<style>
-  /* Consent overlay */
-  #consent-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Space Grotesk', sans-serif;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-    text-align: center;
-  }
-  #consent-overlay button {
-    margin: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  #accept-btn { background: #00ff66; color:#000; }
-  #decline-btn { background: #ff3300; color:#fff; }
-</style>
-
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCH0L1bBqWbyzFhpxgj5lhLtfuKNK6j1FU",
-  authDomain: "iintegre.firebaseapp.com",
-  projectId: "iintegre",
-  storageBucket: "iintegre.firebasestorage.app",
-  messagingSenderId: "53309897600",
-  appId: "1:53309897600:web:b69df9f41a49b794acdf65",
-  measurementId: "G-M6EJCX0K6Y"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCH0L1bBqWbyzFhpxgj5lhLtfuKNK6j1FU",
+    authDomain: "iintegre.firebaseapp.com",
+    projectId: "iintegre",
+    storageBucket: "iintegre.firebasestorage.app",
+    messagingSenderId: "53309897600",
+    appId: "1:53309897600:web:b69df9f41a49b794acdf65",
+    measurementId: "G-M6EJCX0K6Y"
+  };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
-const consentKey = 'iintegre_consent';
-let consentGiven = localStorage.getItem(consentKey);
-
-function showConsentOverlay() {
-  if (consentGiven) return;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'consent-overlay';
-  overlay.innerHTML = `
-    <h2>Consent required</h2>
-    <p>You must accept or decline analytics to continue.</p>
-    <div>
-      <button id="accept-btn">Accept</button>
-      <button id="decline-btn">Decline</button>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-  document.body.style.filter = 'blur(5px)';
-
-  document.getElementById('accept-btn').addEventListener('click', () => {
-    localStorage.setItem(consentKey, 'accepted');
-    consentGiven = 'accepted';
-    document.body.style.filter = '';
-    overlay.remove();
-  });
-
-  document.getElementById('decline-btn').addEventListener('click', () => {
-    localStorage.setItem(consentKey, 'declined');
-    consentGiven = 'declined';
-    document.body.style.filter = '';
-    overlay.remove();
-    // Optional: delete any queued analytics events
-  });
-}
-
-// Trigger overlay on scroll, click, or after 5s
-function triggerConsent() {
-  if (!consentGiven) showConsentOverlay();
-}
-
-// Add scroll & click triggers
-['scroll', 'click'].forEach(evt => {
-  window.addEventListener(evt, () => {
-    if (!consentGiven) showConsentOverlay();
-  }, { once: true });
-});
-
-// Timeout trigger after 5s
-setTimeout(triggerConsent, 5000);
-
-// Wrap all links to require consent
-document.addEventListener('DOMContentLoaded', () => {
-  const links = document.querySelectorAll('a');
-  links.forEach(a => {
-    a.addEventListener('click', e => {
-      if (!consentGiven) {
-        e.preventDefault();
-        showConsentOverlay();
-      }
-    });
-  });
-
-  // Download event only if accepted
-  const downloadLink = document.querySelector('.button-download-part');
-  if (downloadLink) {
-    downloadLink.addEventListener('click', () => {
-      if (consentGiven === 'accepted') {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Download-Link Event
+    const downloadLink = document.querySelector('.button-download-part');
+    if (downloadLink) {
+      downloadLink.addEventListener('click', () => {
         const fileUrl = downloadLink.href;
         const fileName = fileUrl.split('/').pop();
         const fileExtension = fileName.split('.').pop();
-        logEvent(analytics, 'file_download', { file_name: fileName, file_extension: fileExtension, file_url: fileUrl });
-      }
-    });
-  }
 
-  // Bitcoin copy
-  const bitcoinAddressElement = document.getElementById('bitcoin-address');
-  if (bitcoinAddressElement) {
-    const fullAddress = bitcoinAddressElement.dataset.address;
-    bitcoinAddressElement.addEventListener('click', () => {
-      navigator.clipboard.writeText(fullAddress).then(() => {
-        const originalText = bitcoinAddressElement.textContent;
-        bitcoinAddressElement.textContent = 'Copied!';
-        setTimeout(() => bitcoinAddressElement.textContent = originalText, 1500);
+        logEvent(analytics, 'file_download', {
+          file_name: fileName,
+          file_extension: fileExtension,
+          file_url: fileUrl
+        });
       });
-    });
-  }
-});
+    }
+
+    // Bitcoin Copy
+    const bitcoinAddressElement = document.getElementById('bitcoin-address');
+    if (bitcoinAddressElement) {
+      const fullAddress = bitcoinAddressElement.dataset.address;
+      bitcoinAddressElement.addEventListener('click', () => {
+        navigator.clipboard.writeText(fullAddress).then(() => {
+          const originalText = bitcoinAddressElement.textContent;
+          bitcoinAddressElement.textContent = 'Copied!';
+          setTimeout(() => bitcoinAddressElement.textContent = originalText, 1500);
+        });
+      });
+    }
+  });
 </script>
 </head>
-
 <body>
 <nav class="navbar">
   <div class="nav-container">
@@ -172,16 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="container os-content">
     <h2 class="section-title os-title reveal-text">II25 by IIntegre</h2>
     <div class="os-info-block">
-      <p class="section-description reveal-text"><strong>II25</strong> is an experimental, brand-new command-line OS currently in active development.</p>
-      <p class="section-description reveal-text">Custom kernel, zero bloatware. Currently CLI-based.</p>
+      <p class="section-description reveal-text"><strong>II25</strong> is an experimental, brand-new command-line operating system currently in active development. Built entirely from scratch using <strong>Assembly and C</strong>, it prioritizes safety, simplicity, and performance for both beginners and professionals.</p>
+      <p class="section-description reveal-text">Custom kernel, zero bloatware. Currently CLI-based and designed for people who actually care about what's running on their machine.</p>
     </div>
     <div class="os-feature-list">
       <h3 class="feature-title reveal-text">Current Focus (II25 release):</h3>
       <ul class="feature-points">
-        <li class="reveal-text">ISO image (VirtualBox/VMware)</li>
+        <li class="reveal-text">Available as an ISO image (works in VirtualBox/VMware)</li>
         <li class="reveal-text">Built from scratch (custom kernel)</li>
-        <li class="reveal-text">Zero bloatware</li>
-        <li class="reveal-text">CLI only</li>
+        <li class="reveal-text">Zero bloatware, minimal resource usage</li>
+        <li class="reveal-text">Currently Command-Line Interface (CLI) only</li>
         <li class="reveal-text">Simple design, professional results</li>
       </ul>
     </div>
@@ -201,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <section id="code" class="section">
   <div class="container">
     <h2 class="section-title">code</h2>
-    <p class="section-description">We publish most of our code, redistribution or modification not allowed.</p>
+    <p class="section-description">we publish most of our code, but redistribution or modification and republication of our work is not allowed.</p>
     <div class="code-links">
       <a href="https://github.com/iintegre" target="_blank" class="code-link">github →</a>
     </div>
@@ -212,11 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="container">
     <h2 class="section-title">contact</h2>
     <div class="contact-info">
-      <p>Questions or ideas? Reach out directly.</p>
+      <p>Got questions, ideas, or just want to chat? Hit us up directly below. We're real people, so we'll actually respond.</p>
       <a href="mailto:iintegre@proton.me" class="contact-link">iintegre@proton.me</a>
       <p style="margin-top:1rem; font-size:14px; opacity:0.85;">
-        Support via Bitcoin: 
-        <strong id="bitcoin-address" data-address="bc1qq6epu2rhj6f4e74ry8zaa2479lt72sr67zyvg6">bc1qq6e...yvg6</strong>
+        Support our work via Bitcoin: 
+        <strong id="bitcoin-address" data-address="bc1qq6epu2rhj6f4e74ry8zaa2479lt72sr67zyvg6" title="Click to copy full address">bc1qq6e...yvg6</strong>
       </p>
     </div>
   </div>
@@ -227,7 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
 </footer>
 
 <script type="importmap">
-  { "imports": { "three": "https://esm.sh/three@0.165.0" } }
+  {
+    "imports": { "three": "https://esm.sh/three@0.165.0" }
+  }
 </script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
