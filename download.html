@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Download II OS</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-dark: #000000; /* Fully black */
+      --bg-dark: #000000;
       --text-light: #ffffff;
       --accent-green: #00ff66;
     }
@@ -40,77 +42,106 @@
     #bitcoin-address {
       font-size: clamp(18px, 5vw, 20px);
       font-weight: 700;
-      color: var(--text-light);
       cursor: pointer;
       border-bottom: 2px solid var(--accent-green);
       padding-bottom: 2px;
-      display: inline-block;
-      transition: color 0.2s;
-    }
-    #bitcoin-address:hover {
-      color: var(--accent-green);
     }
     .download-link {
-        margin-top: 30px;
+      margin-top: 30px;
     }
     .home-link {
-        margin-top: 40px;
-        display: block;
-        color: var(--text-light);
-        opacity: 0.7;
-        font-size: 14px;
-        text-decoration: none;
+      margin-top: 40px;
+      display: block;
+      opacity: 0.7;
+      font-size: 14px;
+      text-decoration: none;
+      color: var(--text-light);
     }
   </style>
+
+  <!-- Firebase Analytics -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCH0L1bBqWbyzFhpxgj5lhLtfuKNK6j1FU",
+      authDomain: "iintegre.firebaseapp.com",
+      projectId: "iintegre",
+      storageBucket: "iintegre.firebasestorage.app",
+      messagingSenderId: "53309897600",
+      appId: "1:53309897600:web:b69df9f41a49b794acdf65",
+      measurementId: "G-M6EJCX0K6Y"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const downloadLink = document.querySelector('.download-link a');
+
+      if (downloadLink) {
+        const fileUrl = downloadLink.href;
+        const fileName = fileUrl.split('/').pop();
+        const fileExtension = fileName.split('.').pop();
+
+        // 🔥 GA4 / Firebase event
+        logEvent(analytics, 'file_download', {
+          file_name: fileName,
+          file_extension: fileExtension,
+          file_url: fileUrl
+        });
+
+        // ⏱ give GA time to send event
+        setTimeout(() => {
+          window.location.href = fileUrl;
+        }, 300);
+      }
+
+      // Bitcoin copy logic
+      const bitcoinAddressElement = document.getElementById('bitcoin-address');
+      if (bitcoinAddressElement) {
+        const fullAddress = bitcoinAddressElement.dataset.address;
+
+        bitcoinAddressElement.addEventListener('click', () => {
+          navigator.clipboard.writeText(fullAddress).then(() => {
+            const originalText = bitcoinAddressElement.textContent;
+            bitcoinAddressElement.textContent = 'Copied!';
+            setTimeout(() => {
+              bitcoinAddressElement.textContent = originalText;
+            }, 1500);
+          });
+        });
+      }
+    });
+  </script>
 </head>
+
 <body>
   <div class="container">
     <h1>Thank you for downloading II25!</h1>
     <p>Your download should start shortly. If it doesn't, please click the link below.</p>
 
     <div class="download-link">
-        <a href="https://github.com/jusmichael/II/raw/f4562ceb61a2d04a7fbceec8abb9e99bc46be75d/ii25_dec_1.iso" download="ii25_dec_1.iso" style="color: var(--accent-green); text-decoration: none; font-size: 24px; font-weight: 600;">Restart Download</a>
+      <a
+        href="https://github.com/jusmichael/II/raw/f4562ceb61a2d04a7fbceec8abb9e99bc46be75d/ii25_dec_1.iso"
+        download="ii25_dec_1.iso"
+        style="color: var(--accent-green); font-size: 24px; font-weight: 600; text-decoration: none;"
+      >
+        Restart Download
+      </a>
     </div>
 
-    <p style="margin-top: 4rem;">
-      Donate via Bitcoin if you want to support our work:
-    </p>
-    <strong id="bitcoin-address" data-address="bc1qq6epu2rhj6f4e74ry8zaa2479lt72sr67zyvg6" title="Click to copy full address">bc1qq6e...yvg6</strong>
-    
+    <p style="margin-top: 4rem;">Donate via Bitcoin if you want to support our work:</p>
+    <strong
+      id="bitcoin-address"
+      data-address="bc1qq6epu2rhj6f4e74ry8zaa2479lt72sr67zyvg6"
+      title="Click to copy full address"
+    >
+      bc1qq6e...yvg6
+    </strong>
+
     <a href="index.html" class="home-link">← Back to IIntegre Home</a>
   </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Automatically trigger download
-        const downloadLink = document.querySelector('.download-link a');
-        if (downloadLink) {
-            // Use window.location to trigger download navigation
-            window.location.href = downloadLink.href;
-        }
-
-        // Bitcoin Address Copy Handler (Duplicated logic from script.js, necessary for standalone page)
-        const bitcoinAddressElement = document.getElementById('bitcoin-address');
-        if (bitcoinAddressElement) {
-            const fullAddress = bitcoinAddressElement.getAttribute('data-address');
-            
-            bitcoinAddressElement.addEventListener('click', () => {
-                if (navigator.clipboard && fullAddress) {
-                    navigator.clipboard.writeText(fullAddress).then(() => {
-                        const originalText = bitcoinAddressElement.textContent;
-                        bitcoinAddressElement.textContent = 'Copied!';
-                        setTimeout(() => {
-                            bitcoinAddressElement.textContent = originalText;
-                        }, 1500);
-                    }).catch(err => {
-                        console.error('Could not copy text: ', err);
-                        alert(`Could not copy address automatically. Please copy manually: ${fullAddress}`);
-                    });
-                }
-            });
-        }
-    });
-  </script>
 </body>
 </html>
-
