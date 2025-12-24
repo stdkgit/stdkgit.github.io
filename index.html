@@ -39,7 +39,6 @@
   });
 
   document.addEventListener("DOMContentLoaded", () => {
-
     // Download-Link Event
     const downloadLink = document.querySelector(".button-download-part");
     if (downloadLink) {
@@ -64,6 +63,10 @@
       });
     }
 
+    // Optional: cosmetic removal of trailing slash for /versions and /download
+    if (location.pathname.endsWith('/') && location.pathname !== '/') {
+      history.replaceState(null, '', location.pathname.slice(0, -1));
+    }
   });
 </script>
 </head>
@@ -122,8 +125,8 @@
           <span class="material-symbols-outlined stack-icon">stack</span>
         </a>
         <a href="/download" class="os-download-button button-download-part">
-  <span class="button-text">Download latest version</span>
-</a>
+          <span class="button-text">Download latest version</span>
+        </a>
       </div>
     </div>
   </div>
