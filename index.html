@@ -26,12 +26,9 @@
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 
-  // Disable cookies (cookieless mode)
   setConsent({ analytics_storage: 'denied' });
-
   console.info("[Analytics] Initialized (cookieless)");
 
-  // Force page_view
   logEvent(analytics, "page_view", {
     page_title: document.title,
     page_location: window.location.href,
@@ -39,7 +36,6 @@
   });
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Download-Link Event
     const downloadLink = document.querySelector(".button-download-part");
     if (downloadLink) {
       downloadLink.addEventListener("click", () => {
@@ -50,7 +46,6 @@
       });
     }
 
-    // Bitcoin copy
     const bitcoinAddressElement = document.getElementById("bitcoin-address");
     if (bitcoinAddressElement) {
       const fullAddress = bitcoinAddressElement.dataset.address;
@@ -63,7 +58,6 @@
       });
     }
 
-    // Optional: cosmetic removal of trailing slash for /versions and /download
     if (location.pathname.endsWith('/') && location.pathname !== '/') {
       history.replaceState(null, '', location.pathname.slice(0, -1));
     }
@@ -71,6 +65,21 @@
 </script>
 </head>
 <body>
+
+<!-- Screenshots at top -->
+<section class="screenshots-top section section-light-gap">
+  <div class="container screenshots-top-container">
+    <h2 class="section-title reveal-text">Screenshots</h2>
+    <div class="screenshots-gallery-top">
+      <div class="screenshot-wrapper" title="Networking in II25">
+        <img src="/network.png" alt="Networking in II25" class="screenshot-top">
+      </div>
+      <div class="screenshot-wrapper" title="OS Preview">
+        <img src="/ospreview.png" alt="OS Preview" class="screenshot-top">
+      </div>
+    </div>
+  </div>
+</section>
 
 <nav class="navbar">
   <div class="nav-container">
@@ -128,15 +137,6 @@
         <li class="reveal-text">Disk size: 10MB</li>
         <li class="reveal-text">CPU: 1 core only (multi-core support will be added later)</li>
       </ul>
-    </div>
-
-    <!-- Screenshots -->
-    <div class="screenshots-block reveal-text">
-      <h3 class="feature-title">Screenshots</h3>
-      <div class="screenshots-gallery">
-        <img src="/network.png" alt="Networking in II25" class="screenshot">
-        <img src="/ospreview.png" alt="OS Preview" class="screenshot">
-      </div>
     </div>
 
     <!-- Download -->
