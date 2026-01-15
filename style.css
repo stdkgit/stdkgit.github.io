@@ -1,0 +1,307 @@
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-color: #ffffff;
+    --font-main: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --transition-speed: 0.3s;
+    --border-dim: rgba(255, 255, 255, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+#app {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.mono { font-family: var(--font-mono); }
+
+.view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.98);
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+.view.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1);
+}
+
+/* Home View */
+#view-home {
+    justify-content: space-between;
+}
+
+header {
+    margin-top: 1rem;
+}
+
+.logo-container {
+    margin-bottom: 1rem;
+}
+
+.hero-logo {
+    width: 80px;
+    height: auto;
+    filter: brightness(1.2);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    border-left: 4px solid var(--text-color);
+    padding-left: 1rem;
+}
+
+.main-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    background: transparent;
+    border: 1px solid var(--border-dim);
+    color: var(--text-color);
+    padding: 1.25rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover, .nav-item:active {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border-color: var(--text-color);
+}
+
+.nav-item .label {
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    opacity: 0.5;
+}
+
+.nav-item .title {
+    flex-grow: 1;
+    margin-left: 1.2rem;
+    font-weight: 500;
+}
+
+/* Back Button */
+.back-btn-stylized {
+    background: transparent;
+    border: 1px solid var(--border-dim);
+    color: var(--text-color);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: all 0.2s ease;
+}
+
+.back-btn-stylized:active {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+.back-btn-stylized .material-symbols-outlined {
+    font-size: 18px;
+    margin-right: 2px; /* optical center */
+}
+
+/* Content */
+.content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content.scrollable {
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.brand-header {
+    margin-bottom: 1.5rem;
+}
+
+.brand-logo {
+    width: 50px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.brand-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+}
+
+/* Tools List */
+.tools-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tool-item {
+    border: 1px solid var(--border-dim);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tool-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.tool-name {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.tool-meta {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    font-family: var(--font-mono);
+}
+
+.download-btn {
+    color: var(--text-color);
+    text-decoration: none;
+    border: 1px solid var(--text-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.download-btn:active {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Redeem Section */
+.content.centered {
+    justify-content: center;
+}
+
+.terminal-box {
+    border: 1px solid var(--border-dim);
+    padding: 2rem;
+    background: rgba(255,255,255,0.02);
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+#redeem-input {
+    background: transparent;
+    border: 1px solid var(--border-dim);
+    color: var(--text-color);
+    padding: 1rem;
+    flex-grow: 1;
+    font-size: 1rem;
+    outline: none;
+}
+
+#redeem-input:focus {
+    border-color: var(--text-color);
+}
+
+.submit-btn {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 0 1.5rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.status-text {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    height: 1.2rem;
+}
+
+/* Legacy List styles */
+.list-item {
+    border-bottom: 1px solid var(--border-dim);
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+}
+
+.status {
+    font-size: 0.6rem;
+    border: 1px solid var(--text-color);
+    padding: 2px 6px;
+}
+
+.main-footer {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    opacity: 0.4;
+    text-align: center;
+    font-family: var(--font-mono);
+    margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .view { padding: 4rem; }
+    header h1 { font-size: 4rem; }
+    .nav-item { padding: 1.5rem 2rem; }
+}

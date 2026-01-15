@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STDKGIT // 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Main Menu -->
+        <section id="view-home" class="view active">
+            <header>
+                <div class="logo-container">
+                    <img src="/stdklogo.png" alt="STDK" class="hero-logo">
+                </div>
+                <h1 class="glitch-text">STDKGIT</h1>
+            </header>
+            <nav class="main-nav">
+                <button class="nav-item" onclick="window.open('https://itch.io', '_blank')">
+                    <span class="label">01</span>
+                    <span class="title">(itchio)</span>
+                    <span class="material-symbols-outlined">launch</span>
+                </button>
+                <button class="nav-item" onclick="navigateTo('redeem')">
+                    <span class="label">02</span>
+                    <span class="title">REDEEM PROJECT</span>
+                    <span class="material-symbols-outlined">key</span>
+                </button>
+            </nav>
+            <footer class="main-footer">
+                <p>© 2026 STDK GIT SYSTEM</p>
+            </footer>
+        </section>
+
+        <!-- STDK Page -->
+        <section id="view-stdk" class="view">
+            <button class="back-btn-stylized" onclick="navigateTo('home')">
+                <span class="material-symbols-outlined">arrow_back_ios_new</span>
+            </button>
+            <div class="content scrollable">
+                <div class="brand-header">
+                    <img src="/stdklogo.png" alt="STDK" class="brand-logo">
+                    <h2>GAMES</h2>
+                </div>
+                <p class="description mono">Experimental tooling for structural tactical design kinematics. Repository: v2.0.26</p>
+                
+                <div class="tools-list">
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <span class="tool-name">VERTEX_SHAPER.EXE</span>
+                            <span class="tool-meta">4.2MB // V1.2</span>
+                        </div>
+                        <a href="#" class="download-btn" onclick="simulateDownload('VERTEX_SHAPER.EXE')">
+                            <span class="material-symbols-outlined">download</span>
+                        </a>
+                    </div>
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <span class="tool-name">KINEMATIC_SOLVER.SYS</span>
+                            <span class="tool-meta">12.8MB // V0.9-BETA</span>
+                        </div>
+                        <a href="#" class="download-btn" onclick="simulateDownload('KINEMATIC_SOLVER.SYS')">
+                            <span class="material-symbols-outlined">download</span>
+                        </a>
+                    </div>
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <span class="tool-name">STDK_CORE_PATCH.ZIP</span>
+                            <span class="tool-meta">156KB // HOTFIX</span>
+                        </div>
+                        <a href="#" class="download-btn" onclick="simulateDownload('STDK_CORE_PATCH.ZIP')">
+                            <span class="material-symbols-outlined">download</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bird Games Page -->
+        <section id="view-birdgames" class="view">
+            <button class="back-btn-stylized" onclick="navigateTo('home')">
+                <span class="material-symbols-outlined">arrow_back_ios_new</span>
+            </button>
+            <div class="content scrollable">
+                <div class="brand-header">
+                    <img src="bird_logo.png" alt="Bird Games" class="brand-logo">
+                    <h2>BIRD GAMES</h2>
+                </div>
+                <p class="description">Ethereal flight and chaotic patterns. Minimalist simulations.</p>
+                <div class="list">
+                    <div class="list-item"><span>WINGSPAN_01</span> <span class="status">STABLE</span></div>
+                    <div class="list-item"><span>NEST_VOID</span> <span class="status">STABLE</span></div>
+                    <div class="list-item"><span>SKY_DRIFT</span> <span class="status">STABLE</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Redeem Page -->
+        <section id="view-redeem" class="view">
+            <button class="back-btn-stylized" onclick="navigateTo('home')">
+                <span class="material-symbols-outlined">arrow_back_ios_new</span>
+            </button>
+            <div class="content centered">
+                <div class="terminal-box">
+                    <label class="mono">> ENTER_REDEEM_CODE:</label>
+                    <div class="input-row">
+                        <input type="text" id="redeem-input" class="mono" placeholder="XXXX-XXXX-XXXX" maxlength="14">
+                        <button class="submit-btn" onclick="handleRedeem()">EXECUTE</button>
+                    </div>
+                    <div id="redeem-status" class="mono status-text"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
