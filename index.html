@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STDK - Studio Kurvik | Subexponential</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, #f5f5f5 1px, transparent 1px),
+                linear-gradient(to bottom, #f5f5f5 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #f5f5f5 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: #1a1a1a;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 1px solid #e5e5e5;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        /* Banner */
+        .banner {
+            margin: 60px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e5e5e5;
+        }
+
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-gray {
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 60px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: #ccc;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Price Box */
+        .price-box {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 48px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .price-box h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .price-box .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 24px 0;
+        }
+
+        .price-box p {
+            color: #999;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-section h4 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 32px;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 20px;
+            }
+
+            .nav-links span {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function App() {
+            return (
+                <>
+                    <nav>
+                        <div className="nav-content">
+                            <div className="logo">
+                                <img src="logo.png" alt="STDK" />
+                                <div className="logo-text">STDK</div>
+                            </div>
+                            <div className="nav-links">
+                                <a href="#game">
+                                    <span className="material-icons">sports_esports</span>
+                                    <span>Game</span>
+                                </a>
+                                <a href="#about">
+                                    <span className="material-icons">info</span>
+                                    <span>About</span>
+                                </a>
+                                <a href="download.html">
+                                    <span className="material-icons">download</span>
+                                    <span>Download</span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <section className="hero">
+                        <div className="container">
+                            <div className="tag">Studio Kurvik</div>
+                            <h1>Subexponential</h1>
+                            <p>
+                                A first-person delivery and smuggling game set in a stylized low-poly city. 
+                                Navigate borders, transport goods, and make strategic decisions.
+                            </p>
+
+                            <div className="banner">
+                                <img src="gamebanner.png" alt="Subexponential" />
+                            </div>
+
+                            <div className="price-box">
+                                <h3>Demo Alpha</h3>
+                                <p>Coming Soon</p>
+                                <div className="price">FREE</div>
+                                <p>Full game: $4-12 when released</p>
+                            </div>
+
+                            <div className="btn-group">
+                                <a href="download.html" className="btn btn-primary">
+                                    <span className="material-icons">download</span>
+                                    Download Info
+                                </a>
+                                <a href="https://bsky.app/profile/stdkstore.github.io" className="btn btn-secondary" target="_blank" rel="noopener">
+                                    <span className="material-icons">rss_feed</span>
+                                    Follow Updates
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="game" className="section-gray">
+                        <div className="container">
+                            <h2 className="section-title">Gameplay</h2>
+                            <p className="section-subtitle">Core mechanics and features</p>
+                            
+                            <div className="grid">
+                                <div className="card">
+                                    <span className="material-icons card-icon">visibility</span>
+                                    <h3>First Person</h3>
+                                    <p>Immersive first-person perspective for direct control and engagement.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">directions_car</span>
+                                    <h3>Driving</h3>
+                                    <p>Drive various vehicles through the city streets and highways.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">local_shipping</span>
+                                    <h3>Delivery System</h3>
+                                    <p>Transport goods across the city and complete delivery contracts.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">security</span>
+                                    <h3>Border Control</h3>
+                                    <p>Navigate checkpoints and manage contraband at border crossings.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">location_city</span>
+                                    <h3>Stylized City</h3>
+                                    <p>Explore a low-poly urban environment with distinct districts.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">trending_up</span>
+                                    <h3>Strategic Choices</h3>
+                                    <p>Balance risk and reward in your delivery and smuggling operations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="about">
+                        <div className="container">
+                            <h2 className="section-title">About STDK</h2>
+                            <p className="section-subtitle">Independent game development</p>
+                            
+                            <div className="grid">
+                                <div className="card">
+                                    <span className="material-icons card-icon">person</span>
+                                    <h3>Solo Developer</h3>
+                                    <p>STDK (Studio Kurvik) is a one-person indie game studio.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">code</span>
+                                    <h3>Godot Engine</h3>
+                                    <p>Built with the open-source Godot game engine.</p>
+                                </div>
+
+                                <div className="card">
+                                    <span className="material-icons card-icon">palette</span>
+                                    <h3>Low-Poly Style</h3>
+                                    <p>Distinctive stylized graphics and aesthetic design.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer>
+                        <div className="container">
+                            <div className="footer-content">
+                                <div className="footer-section">
+                                    <h4>STDK</h4>
+                                    <p style={{color: '#999', fontSize: '15px', lineHeight: '1.7'}}>
+                                        Studio Kurvik - Independent game development.
+                                    </p>
+                                </div>
+
+                                <div className="footer-section">
+                                    <h4>Links</h4>
+                                    <div className="footer-links">
+                                        <a href="https://stdk.itch.io" target="_blank" rel="noopener">
+                                            <span className="material-icons" style={{fontSize: '18px'}}>videogame_asset</span>
+                                            Games on itch.io
+                                        </a>
+                                        <a href="https://sketchfab.com/STDK" target="_blank" rel="noopener">
+                                            <span className="material-icons" style={{fontSize: '18px'}}>view_in_ar</span>
+                                            Assets on Sketchfab
+                                        </a>
+                                        <a href="https://bsky.app/profile/stdkstore.github.io" target="_blank" rel="noopener">
+                                            <span className="material-icons" style={{fontSize: '18px'}}>cloud</span>
+                                            Bluesky
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="footer-section">
+                                    <h4>Technology</h4>
+                                    <div className="footer-links">
+                                        <a href="#game">
+                                            <span className="material-icons" style={{fontSize: '18px'}}>info</span>
+                                            Game Info
+                                        </a>
+                                        <a href="https://godotengine.org" target="_blank" rel="noopener">
+                                            <span className="material-icons" style={{fontSize: '18px'}}>rocket_launch</span>
+                                            Godot Engine
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="footer-bottom">
+                                <p>© 2026 STDK - Studio Kurvik. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </footer>
+                </>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

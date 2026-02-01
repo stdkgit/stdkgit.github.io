@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - STDK</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, #f5f5f5 1px, transparent 1px),
+                linear-gradient(to bottom, #f5f5f5 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #f5f5f5 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+
+        .logo img {
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: #1a1a1a;
+        }
+
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-gray {
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 48px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .content-text h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .content-text p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .content-image {
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 40px;
+            background: #f9f9f9;
+            text-align: center;
+        }
+
+        .content-image img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .card:hover {
+            border-color: #ccc;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .card .material-icons {
+            font-size: 40px;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .platform-card {
+            text-decoration: none;
+            display: block;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-4px);
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 40px 0 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links span {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function AboutPage() {
+            return (
+                <>
+                    <nav>
+                        <div className="nav-content">
+                            <a href="index.html" className="logo">
+                                <img src="logo.png" alt="STDK" />
+                                <div className="logo-text">STDK</div>
+                            </a>
+                            <div className="nav-links">
+                                <a href="index.html">
+                                    <span className="material-icons">home</span>
+                                    <span>Home</span>
+                                </a>
+                                <a href="game.html">
+                                    <span className="material-icons">sports_esports</span>
+                                    <span>Game</span>
+                                </a>
+                                <a href="download.html">
+                                    <span className="material-icons">download</span>
+                                    <span>Download</span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <section className="hero">
+                        <div className="container">
+                            <h1>Studio Kurvik</h1>
+                            <p>Independent solo game development focused on unique experiences and stylized design.</p>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div className="container">
+                            <div className="content-grid">
+                                <div className="content-text">
+                                    <h3>About the Studio</h3>
+                                    <p>
+                                        STDK (Studio Kurvik) is a solo independent game development studio creating 
+                                        unique gaming experiences with a focus on stylized aesthetics and engaging gameplay.
+                                    </p>
+                                    <p>
+                                        Operating with an efficient, lean approach, the studio prioritizes innovative 
+                                        mechanics and distinctive visual styles while maintaining accessibility across 
+                                        different platforms.
+                                    </p>
+                                    <p>
+                                        The current project, Subexponential, represents the studio's commitment to 
+                                        blending strategic gameplay with immersive first-person experiences.
+                                    </p>
+                                </div>
+                                <div className="content-image">
+                                    <img src="logo.png" alt="STDK Logo" />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="section-gray">
+                        <div className="container">
+                            <h2 className="section-title">Development Approach</h2>
+                            <p className="section-subtitle">Core principles</p>
+                            <div className="grid">
+                                <div className="card">
+                                    <span className="material-icons">emoji_objects</span>
+                                    <h3>Innovation</h3>
+                                    <p>Focus on unique gameplay mechanics over following trends.</p>
+                                </div>
+                                <div className="card">
+                                    <span className="material-icons">brush</span>
+                                    <h3>Style</h3>
+                                    <p>Embrace distinctive low-poly aesthetics that stand out.</p>
+                                </div>
+                                <div className="card">
+                                    <span className="material-icons">speed</span>
+                                    <h3>Performance</h3>
+                                    <p>Optimize for both PC and mobile platforms.</p>
+                                </div>
+                                <div className="card">
+                                    <span className="material-icons">favorite</span>
+                                    <h3>Experience</h3>
+                                    <p>Design with player engagement and enjoyment in mind.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div className="container">
+                            <h2 className="section-title">Find STDK Online</h2>
+                            <p className="section-subtitle">Connect and stay updated</p>
+                            <div className="grid">
+                                <a href="https://stdk.itch.io" className="card platform-card" target="_blank" rel="noopener">
+                                    <span className="material-icons">videogame_asset</span>
+                                    <h3>itch.io</h3>
+                                    <p>Download games, demos, and releases</p>
+                                </a>
+
+                                <a href="https://sketchfab.com/STDK" className="card platform-card" target="_blank" rel="noopener">
+                                    <span className="material-icons">view_in_ar</span>
+                                    <h3>Sketchfab</h3>
+                                    <p>3D assets and published resources</p>
+                                </a>
+
+                                <a href="https://bsky.app/profile/stdkstore.github.io" className="card platform-card" target="_blank" rel="noopener">
+                                    <span className="material-icons">cloud</span>
+                                    <h3>Bluesky</h3>
+                                    <p>Development updates and announcements</p>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="section-gray">
+                        <div className="container">
+                            <h2 className="section-title">Tools & Technology</h2>
+                            <div className="grid">
+                                <div className="card">
+                                    <span className="material-icons">rocket_launch</span>
+                                    <h3>Godot Engine</h3>
+                                    <p>Open-source game engine</p>
+                                </div>
+                                <div className="card">
+                                    <span className="material-icons">palette</span>
+                                    <h3>Low-Poly 3D</h3>
+                                    <p>Stylized graphics approach</p>
+                                </div>
+                                <div className="card">
+                                    <span className="material-icons">code</span>
+                                    <h3>GDScript</h3>
+                                    <p>Primary programming language</p>
+                                </div>
+                                <div className="card">
+                                    <span className="material-icons">view_in_ar</span>
+                                    <h3>Blender</h3>
+                                    <p>3D modeling and animation</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer>
+                        <div className="container">
+                            <div className="footer-links">
+                                <a href="index.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>home</span>
+                                    Home
+                                </a>
+                                <a href="game.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>sports_esports</span>
+                                    Game
+                                </a>
+                                <a href="https://stdk.itch.io" target="_blank" rel="noopener">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>videogame_asset</span>
+                                    itch.io
+                                </a>
+                                <a href="https://sketchfab.com/STDK" target="_blank" rel="noopener">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>view_in_ar</span>
+                                    Sketchfab
+                                </a>
+                            </div>
+                            <p style={{color: '#666', fontSize: '14px', marginTop: '24px'}}>
+                                © 2026 STDK - Studio Kurvik
+                            </p>
+                        </div>
+                    </footer>
+                </>
+            );
+        }
+
+        ReactDOM.render(<AboutPage />, document.getElementById('root'));
+    </script>
+</body>
+</html>

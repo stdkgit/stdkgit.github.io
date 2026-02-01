@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subexponential - STDK</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, #f5f5f5 1px, transparent 1px),
+                linear-gradient(to bottom, #f5f5f5 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 10%;
+            left: 5%;
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, #f5f5f5 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+
+        .logo img {
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: #1a1a1a;
+        }
+
+        .hero {
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #1a1a1a;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(56px, 10vw, 96px);
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+            letter-spacing: -3px;
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .banner {
+            margin: 60px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e5e5e5;
+        }
+
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-gray {
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+        }
+
+        .mechanics {
+            display: grid;
+            gap: 24px;
+        }
+
+        .mechanic-item {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .mechanic-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #e5e5e5;
+            line-height: 1;
+            min-width: 60px;
+        }
+
+        .mechanic-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .mechanic-content p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .tech-item {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .tech-item .material-icons {
+            font-size: 40px;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .tech-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tech-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .download-box {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 60px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .download-box h2 {
+            font-size: 36px;
+            margin-bottom: 24px;
+        }
+
+        .download-box .price {
+            font-size: 56px;
+            font-weight: 700;
+            margin: 32px 0;
+        }
+
+        .download-box p {
+            color: #999;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            margin: 8px;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .btn-primary:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #666;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ffffff;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 40px 0 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links span {
+                display: none;
+            }
+
+            .mechanic-item {
+                flex-direction: column;
+            }
+
+            .mechanic-number {
+                min-width: auto;
+            }
+
+            .download-box {
+                padding: 40px 24px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function GamePage() {
+            return (
+                <>
+                    <nav>
+                        <div className="nav-content">
+                            <a href="index.html" className="logo">
+                                <img src="logo.png" alt="STDK" />
+                                <div className="logo-text">STDK</div>
+                            </a>
+                            <div className="nav-links">
+                                <a href="index.html">
+                                    <span className="material-icons">home</span>
+                                    <span>Home</span>
+                                </a>
+                                <a href="about.html">
+                                    <span className="material-icons">info</span>
+                                    <span>About</span>
+                                </a>
+                                <a href="download.html">
+                                    <span className="material-icons">download</span>
+                                    <span>Download</span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <section className="hero">
+                        <div className="container">
+                            <div className="status-tag">ALPHA DEMO COMING SOON</div>
+                            <h1>Subexponential</h1>
+                            <p>Deliver goods, smuggle contraband, and navigate borders in a stylized low-poly city.</p>
+
+                            <div className="banner">
+                                <img src="gamebanner.png" alt="Subexponential Gameplay" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="section-gray">
+                        <div className="container">
+                            <h2 className="section-title">Core Mechanics</h2>
+                            <div className="mechanics">
+                                <div className="mechanic-item">
+                                    <div className="mechanic-number">01</div>
+                                    <div className="mechanic-content">
+                                        <h3>First-Person Perspective</h3>
+                                        <p>Experience the world directly through your character's eyes. Immersive first-person gameplay puts you in control of every decision and action.</p>
+                                    </div>
+                                </div>
+
+                                <div className="mechanic-item">
+                                    <div className="mechanic-number">02</div>
+                                    <div className="mechanic-content">
+                                        <h3>Vehicle Driving</h3>
+                                        <p>Master different vehicles with unique handling characteristics. Navigate city streets, highways, and back alleys to complete your deliveries.</p>
+                                    </div>
+                                </div>
+
+                                <div className="mechanic-item">
+                                    <div className="mechanic-number">03</div>
+                                    <div className="mechanic-content">
+                                        <h3>Delivery System</h3>
+                                        <p>Transport legitimate cargo across the city. Build your reputation and earn credits through reliable courier services.</p>
+                                    </div>
+                                </div>
+
+                                <div className="mechanic-item">
+                                    <div className="mechanic-number">04</div>
+                                    <div className="mechanic-content">
+                                        <h3>Border Smuggling</h3>
+                                        <p>Take calculated risks by smuggling contraband through border checkpoints. Outsmart security systems and make split-second decisions.</p>
+                                    </div>
+                                </div>
+
+                                <div className="mechanic-item">
+                                    <div className="mechanic-number">05</div>
+                                    <div className="mechanic-content">
+                                        <h3>Strategic Planning</h3>
+                                        <p>Balance risk versus reward. Choose between safe deliveries and high-stakes smuggling operations to maximize your profits.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div className="container">
+                            <h2 className="section-title">Technical Details</h2>
+                            <div className="tech-grid">
+                                <div className="tech-item">
+                                    <span className="material-icons">rocket_launch</span>
+                                    <h4>Engine</h4>
+                                    <p>Godot</p>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="material-icons">palette</span>
+                                    <h4>Art Style</h4>
+                                    <p>Low-Poly</p>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="material-icons">visibility</span>
+                                    <h4>View</h4>
+                                    <p>First-Person</p>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="material-icons">devices</span>
+                                    <h4>Platforms</h4>
+                                    <p>PC & Mobile</p>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="material-icons">person</span>
+                                    <h4>Team</h4>
+                                    <p>Solo Dev</p>
+                                </div>
+                                <div className="tech-item">
+                                    <span className="material-icons">build</span>
+                                    <h4>Status</h4>
+                                    <p>In Development</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div className="container">
+                            <div className="download-box">
+                                <h2>Get Subexponential</h2>
+                                <p>Demo Alpha - Coming Soon</p>
+                                <div className="price">FREE</div>
+                                <p>Full game release: $4-12 USD</p>
+                                <div style={{marginTop: '40px'}}>
+                                    <a href="download.html" className="btn btn-primary">
+                                        <span className="material-icons">download</span>
+                                        Download Info
+                                    </a>
+                                    <a href="https://bsky.app/profile/stdkstore.github.io" className="btn btn-secondary" target="_blank" rel="noopener">
+                                        <span className="material-icons">notifications</span>
+                                        Follow for Updates
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer>
+                        <div className="container">
+                            <div className="footer-links">
+                                <a href="index.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>home</span>
+                                    Home
+                                </a>
+                                <a href="about.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>info</span>
+                                    About
+                                </a>
+                                <a href="https://stdk.itch.io" target="_blank" rel="noopener">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>videogame_asset</span>
+                                    itch.io
+                                </a>
+                                <a href="https://sketchfab.com/STDK" target="_blank" rel="noopener">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>view_in_ar</span>
+                                    Sketchfab
+                                </a>
+                            </div>
+                            <p style={{color: '#666', fontSize: '14px', marginTop: '24px'}}>
+                                © 2026 STDK - Studio Kurvik
+                            </p>
+                        </div>
+                    </footer>
+                </>
+            );
+        }
+
+        ReactDOM.render(<GamePage />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download - Subexponential</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, #f5f5f5 1px, transparent 1px),
+                linear-gradient(to bottom, #f5f5f5 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: 
+                radial-gradient(circle at 30% 30%, #f5f5f5 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, #f0f0f0 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+
+        .logo img {
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a:hover {
+            color: #1a1a1a;
+        }
+
+        .download-hero {
+            padding: 140px 0 60px;
+            text-align: center;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .status-badge .material-icons {
+            font-size: 18px;
+        }
+
+        .download-hero h1 {
+            font-size: clamp(40px, 7vw, 64px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+        }
+
+        .download-hero p {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .info-box {
+            background: #f9f9f9;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 48px;
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .info-box-icon {
+            font-size: 64px;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+        }
+
+        .info-box h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .info-box p {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .price-display {
+            font-size: 56px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 32px 0 16px;
+        }
+
+        .price-note {
+            font-size: 16px;
+            color: #999;
+        }
+
+        .development-section {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 48px;
+            margin: 40px 0;
+        }
+
+        .development-section h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+        }
+
+        .status-list {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-item .material-icons {
+            color: #1a1a1a;
+            font-size: 24px;
+            margin-top: 2px;
+        }
+
+        .status-item-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1a1a1a;
+        }
+
+        .status-item-content p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .timeline {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .timeline h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: #1a1a1a;
+            min-width: 100px;
+        }
+
+        .timeline-content {
+            color: #666;
+            flex: 1;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 2px solid #e5e5e5;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #ccc;
+        }
+
+        .alert-box {
+            background: #fffbf0;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 32px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .alert-box .material-icons {
+            color: #d4a400;
+            font-size: 28px;
+        }
+
+        .alert-box-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .alert-box-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 40px 0 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links span {
+                display: none;
+            }
+
+            .download-hero {
+                padding: 100px 0 40px;
+            }
+
+            .info-box,
+            .development-section {
+                padding: 32px 24px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .timeline-date {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function DownloadPage() {
+            return (
+                <>
+                    <nav>
+                        <div className="nav-content">
+                            <a href="index.html" className="logo">
+                                <img src="logo.png" alt="STDK" />
+                                <div className="logo-text">STDK</div>
+                            </a>
+                            <div className="nav-links">
+                                <a href="index.html">
+                                    <span className="material-icons">home</span>
+                                    <span>Home</span>
+                                </a>
+                                <a href="game.html">
+                                    <span className="material-icons">sports_esports</span>
+                                    <span>Game</span>
+                                </a>
+                                <a href="about.html">
+                                    <span className="material-icons">info</span>
+                                    <span>About</span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <section className="download-hero">
+                        <div className="container">
+                            <div className="status-badge">
+                                <span className="material-icons">schedule</span>
+                                In Development
+                            </div>
+                            <h1>Download Subexponential</h1>
+                            <p>Alpha demo coming soon - Follow development progress</p>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div className="container">
+                            <div className="info-box">
+                                <span className="material-icons info-box-icon">build_circle</span>
+                                <h2>Game in Active Development</h2>
+                                <p>
+                                    Subexponential is currently in active development. The demo alpha is not yet available 
+                                    for download, but we're working hard to bring you an exciting first-person delivery 
+                                    and smuggling experience.
+                                </p>
+                                <div className="price-display">FREE</div>
+                                <p className="price-note">Demo Alpha Release</p>
+                                <p style={{marginTop: '16px', fontSize: '16px'}}>
+                                    Full game estimated price: <strong>$4-12 USD</strong>
+                                </p>
+                            </div>
+
+                            <div className="alert-box">
+                                <span className="material-icons">info</span>
+                                <div className="alert-box-content">
+                                    <h4>Want to stay updated?</h4>
+                                    <p>
+                                        Follow the development process on Bluesky for regular updates, behind-the-scenes 
+                                        content, and announcements about the demo release.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="development-section">
+                                <h3>Development Status</h3>
+                                <ul className="status-list">
+                                    <li className="status-item">
+                                        <span className="material-icons">check_circle</span>
+                                        <div className="status-item-content">
+                                            <h4>Core Mechanics</h4>
+                                            <p>First-person driving and delivery systems are being implemented in Godot Engine.</p>
+                                        </div>
+                                    </li>
+                                    <li className="status-item">
+                                        <span className="material-icons">palette</span>
+                                        <div className="status-item-content">
+                                            <h4>Visual Style</h4>
+                                            <p>Low-poly stylized art style is being developed with a focus on performance.</p>
+                                        </div>
+                                    </li>
+                                    <li className="status-item">
+                                        <span className="material-icons">map</span>
+                                        <div className="status-item-content">
+                                            <h4>World Building</h4>
+                                            <p>City environment and border crossing systems are in progress.</p>
+                                        </div>
+                                    </li>
+                                    <li className="status-item">
+                                        <span className="material-icons">tune</span>
+                                        <div className="status-item-content">
+                                            <h4>Gameplay Balance</h4>
+                                            <p>Risk/reward systems and game mechanics are being refined and tested.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div className="timeline">
+                                    <h4>Development Roadmap</h4>
+                                    <div className="timeline-item">
+                                        <div className="timeline-date">2026 Q1</div>
+                                        <div className="timeline-content">Core mechanics and first playable build</div>
+                                    </div>
+                                    <div className="timeline-item">
+                                        <div className="timeline-date">2026 Q2</div>
+                                        <div className="timeline-content">Alpha demo release on itch.io</div>
+                                    </div>
+                                    <div className="timeline-item">
+                                        <div className="timeline-date">2026 Q3-Q4</div>
+                                        <div className="timeline-content">Beta testing and community feedback</div>
+                                    </div>
+                                    <div className="timeline-item">
+                                        <div className="timeline-date">2027</div>
+                                        <div className="timeline-content">Full game release</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="btn-group">
+                                <a href="https://bsky.app/profile/stdkstore.github.io" className="btn btn-primary" target="_blank" rel="noopener">
+                                    <span className="material-icons">cloud</span>
+                                    Follow Development on Bluesky
+                                </a>
+                                <a href="https://stdk.itch.io" className="btn btn-secondary" target="_blank" rel="noopener">
+                                    <span className="material-icons">videogame_asset</span>
+                                    Visit itch.io Page
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer>
+                        <div className="container">
+                            <div className="footer-links">
+                                <a href="index.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>home</span>
+                                    Home
+                                </a>
+                                <a href="game.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>sports_esports</span>
+                                    Game
+                                </a>
+                                <a href="about.html">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>info</span>
+                                    About
+                                </a>
+                                <a href="https://sketchfab.com/STDK" target="_blank" rel="noopener">
+                                    <span className="material-icons" style={{fontSize: '18px'}}>view_in_ar</span>
+                                    Sketchfab
+                                </a>
+                            </div>
+                            <p style={{color: '#666', fontSize: '14px', marginTop: '24px'}}>
+                                © 2026 STDK - Studio Kurvik
+                            </p>
+                        </div>
+                    </footer>
+                </>
+            );
+        }
+
+        ReactDOM.render(<DownloadPage />, document.getElementById('root'));
+    </script>
+</body>
+</html>
