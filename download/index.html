@@ -11,7 +11,7 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a1a;line-height:1.6;overflow-x:hidden;position:relative;isolation:isolate}
+body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a1a;line-height:1.6;overflow-x:hidden;position:relative}
 body::before,body::after{content:'';position:fixed;pointer-events:none;z-index:-1}
 body::before{inset:0;background-image:linear-gradient(to right,#f5f5f5 1px,transparent 1px),linear-gradient(to bottom,#f5f5f5 1px,transparent 1px);background-size:60px 60px;opacity:.5}
 body::after{top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle at 30% 30%,#f5f5f5 0%,transparent 50%),radial-gradient(circle at 70% 70%,#f0f0f0 0%,transparent 50%);opacity:.4}
@@ -51,7 +51,7 @@ nav{position:fixed;inset:0 0 auto 0;height:72px;background:#fff;backdrop-filter:
 .btn{padding:16px 40px;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:.2s;font-family:'Inter',sans-serif}
 .btn-primary{background:#fff;color:#1a1a1a}
 .btn-primary:hover{background:#f5f5f5}
-.btn-secondary{background:transparent;color:#1a1a1a;border:2px solid #1a1a1a}
+.btn-secondary{background:#fff;color:#1a1a1a;border:2px solid #1a1a1a}
 .btn-secondary:hover{border-color:#666}
 footer{background:#1a1a1a;color:#fff;padding:40px 0 20px;text-align:center;margin-top:80px}
 .footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:24px;flex-wrap:wrap}
@@ -64,61 +64,89 @@ footer{background:#1a1a1a;color:#fff;padding:40px 0 20px;text-align:center;margi
 <div id="root"></div>
 <script type="text/babel">
 function DownloadPage(){
-return<>
-<nav>
-<div className="nav-content">
-<a href="/" className="logo"><img src="logo.png" alt="STDK"/><div className="logo-text">STDK</div></a>
-<div className="nav-links">
-<a href="/"><span className="material-icons">sports_esports</span>Game</a>
-<a href="/about"><span className="material-icons">info</span>About</a>
-</div>
-</div>
-</nav>
-<section className="hero"><div className="container"><h1>Download Subexponential</h1><p>Alpha demo coming soon - Follow development progress</p></div></section>
-<section><div className="container">
-<div className="info-box">
-<span className="material-icons info-box-icon">build_circle</span>
-<h2>Game in Active Development</h2>
-<p>Subexponential is currently in active development. The demo alpha is not yet available, but we're working hard to bring you an exciting first-person delivery and smuggling experience.</p>
-<div className="price-display">FREE</div>
-<p className="price-note">Demo Alpha Release</p>
-<p style={{marginTop:'16px',fontSize:'16px'}}>Full game estimated price: <strong>$4-12 USD</strong></p>
-</div>
-<div className="development-section">
-<h3>Development Status</h3>
-<ul className="status-list">
-<li className="status-item"><span className="material-icons">check_circle</span><div className="status-item-content"><h4>Core Mechanics</h4><p>First-person driving and delivery systems are being implemented in Godot Engine.</p></div></li>
-<li className="status-item"><span className="material-icons">palette</span><div className="status-item-content"><h4>Visual Style</h4><p>Low-poly stylized art style is being developed with a focus on performance & Realism.</p></div></li>
-<li className="status-item"><span className="material-icons">map</span><div className="status-item-content"><h4>World Building</h4><p>City environment and border crossing systems are in progress.</p></div></li>
-<li className="status-item"><span className="material-icons">tune</span><div className="status-item-content"><h4>Gameplay Balance</h4><p>Gameplay Mechanics are still being developed</p></div></li>
-</ul>
-<div className="timeline">
-<h4>Development Roadmap</h4>
-<div className="timeline-item"><div className="timeline-date">2026 Q1</div><div className="timeline-content">Core mechanics and closed development</div></div>
-<div className="timeline-item"><div className="timeline-date">2026 Q2</div><div className="timeline-content">Alpha demo release on itch.io</div></div>
-<div className="timeline-item"><div className="timeline-date">2026 Q3-Q4</div><div className="timeline-content">Beta testing and community feedback</div></div>
-<div className="timeline-item"><div className="timeline-date">2027</div><div className="timeline-content">Full game release</div></div>
-</div>
-</div>
-<div className="btn-group">
-<a href="https://bsky.app/profile/stdkstore.github.io" className="btn btn-primary" target="_blank" rel="noopener noreferrer"><span className="material-icons">cloud</span>Follow on Bluesky</a>
-<a href="https://stdk.itch.io" className="btn btn-secondary" target="_blank" rel="noopener noreferrer"><span className="material-icons">videogame_asset</span>Visit itch.io Page</a>
-</div>
-</div></section>
-<footer>
-<div className="container">
-<div className="footer-links">
-<a href="/"><span className="material-icons">sports_esports</span>Game</a>
-<a href="/about"><span className="material-icons">info</span>About</a>
-<a href="https://sketchfab.com/STDK" target="_blank" rel="noopener noreferrer"><span className="material-icons">view_in_ar</span>Sketchfab</a>
-</div>
-<p style={{color:'#666',fontSize:'14px'}}>© 2026 STDK - Studio Kurvik</p>
-</div>
-</footer>
-</>
+  const [open,setOpen]=React.useState(false);
+  React.useEffect(()=>{document.body.style.overflow=open?"hidden":"auto"},[open]);
+
+  return <>
+  <nav>
+    <div className="nav-content">
+      <a href="/" className="logo"><img src="logo.png" alt="STDK"/><div className="logo-text">STDK</div></a>
+      <div className="nav-links">
+        <a href="/"><span className="material-icons">home</span>Home</a>
+        <a href="/about"><span className="material-icons">info</span>About</a>
+      </div>
+      <button className="menu-btn" onClick={()=>setOpen(true)}><span className="material-icons">menu</span></button>
+    </div>
+  </nav>
+
+  {/* MOBILE MENU */}
+  <div className={`mobile-menu ${open?"open":""}`}>
+    <header>
+      <strong>STDK</strong>
+      <button className="menu-btn" onClick={()=>setOpen(false)}><span className="material-icons">close</span></button>
+    </header>
+    <div className="mobile-links">
+      <a href="/" onClick={()=>setOpen(false)}><span className="material-icons">home</span>Home</a>
+      <a href="/about" onClick={()=>setOpen(false)}><span className="material-icons">info</span>About</a>
+    </div>
+  </div>
+
+  <section className="hero">
+    <div className="container">
+      <h1>Download Subexponential</h1>
+      <p>Alpha demo coming soon - Follow development progress</p>
+    </div>
+  </section>
+
+  <section>
+    <div className="container">
+      <div className="info-box">
+        <span className="material-icons info-box-icon">build_circle</span>
+        <h2>Game in Active Development</h2>
+        <p>Subexponential is currently in active development. The demo alpha is not yet available, but we're working hard to bring you an exciting first-person delivery and smuggling experience.</p>
+        <div className="price-display">FREE</div>
+        <p className="price-note">Demo Alpha Release</p>
+        <p style={{marginTop:'16px',fontSize:'16px'}}>Full game estimated price: <strong>$4-12 USD</strong></p>
+      </div>
+
+      <div className="development-section">
+        <h3>Development Status</h3>
+        <ul className="status-list">
+          <li className="status-item"><span className="material-icons">check_circle</span><div className="status-item-content"><h4>Core Mechanics</h4><p>First-person driving and delivery systems in Godot Engine.</p></div></li>
+          <li className="status-item"><span className="material-icons">palette</span><div className="status-item-content"><h4>Visual Style</h4><p>Low-poly stylized art focusing on performance & realism.</p></div></li>
+          <li className="status-item"><span className="material-icons">map</span><div className="status-item-content"><h4>World Building</h4><p>City environment & border systems in progress.</p></div></li>
+          <li className="status-item"><span className="material-icons">tune</span><div className="status-item-content"><h4>Gameplay Balance</h4><p>Mechanics are still being developed</p></div></li>
+        </ul>
+
+        <div className="timeline">
+          <h4>Development Roadmap</h4>
+          <div className="timeline-item"><div className="timeline-date">2026 Q1</div><div className="timeline-content">Core mechanics and closed development</div></div>
+          <div className="timeline-item"><div className="timeline-date">2026 Q2</div><div className="timeline-content">Alpha demo release on itch.io</div></div>
+          <div className="timeline-item"><div className="timeline-date">2026 Q3-Q4</div><div className="timeline-content">Beta testing & community feedback</div></div>
+          <div className="timeline-item"><div className="timeline-date">2027</div><div className="timeline-content">Full game release</div></div>
+        </div>
+      </div>
+
+      <div className="btn-group">
+        <a href="https://bsky.app/profile/stdkstore.github.io" className="btn btn-primary" target="_blank" rel="noopener noreferrer"><span className="material-icons">cloud</span>Follow on Bluesky</a>
+        <a href="https://stdk.itch.io" className="btn btn-secondary" target="_blank" rel="noopener noreferrer"><span className="material-icons">videogame_asset</span>Visit itch.io Page</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div className="container">
+      <div className="footer-links">
+        <a href="/"><span className="material-icons">home</span>Home</a>
+        <a href="/about"><span className="material-icons">info</span>About</a>
+        <a href="https://sketchfab.com/STDK" target="_blank" rel="noopener noreferrer"><span className="material-icons">view_in_ar</span>Sketchfab</a>
+      </div>
+      <p style={{color:'#666',fontSize:'14px'}}>© 2026 STDK - Studio Kurvik</p>
+    </div>
+  </footer>
+  </>
 }
 ReactDOM.render(<DownloadPage/>,document.getElementById("root"));
 </script>
 </body>
 </html>
-
