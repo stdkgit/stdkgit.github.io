@@ -4,338 +4,208 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Download - Subexponential</title>
-
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:Inter,system-ui,sans-serif;
-    background:#fff;
-    color:#1a1a1a;
-    line-height:1.6;
-    overflow-x:hidden;
-}
-body::before{
-    content:'';
-    position:fixed;
-    inset:0;
-    background-image:
-        linear-gradient(to right,#f5f5f5 1px,transparent 1px),
-        linear-gradient(to bottom,#f5f5f5 1px,transparent 1px);
-    background-size:60px 60px;
-    opacity:.5;
-    pointer-events:none;
-    z-index:0;
-}
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:0 24px;
-    position:relative;
-    z-index:1;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a1a;line-height:1.6;position:relative;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(to right,#f5f5f5 1px,transparent 1px),linear-gradient(to bottom,#f5f5f5 1px,transparent 1px);background-size:60px 60px;z-index:0;pointer-events:none;opacity:.5;}
+body::after{content:'';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle at 30% 30%,#f5f5f5 0%,transparent 50%),radial-gradient(circle at 70% 70%,#f0f0f0 0%,transparent 50%);z-index:0;pointer-events:none;opacity:.4;}
+.container{max-width:900px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+nav{position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid #333;z-index:1000;}
+.nav-content{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;max-width:1200px;margin:0 auto;}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;}
+.logo img{height:40px;width:40px;object-fit:contain;}
+.logo-text{font-size:20px;font-weight:700;letter-spacing:-.5px;color:#fff;}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{color:#fff;text-decoration:none;font-weight:500;font-size:15px;display:flex;align-items:center;gap:6px;transition:color .2s;}
+.nav-links a:hover{color:#f5f5f5;}
 
-/* ================= NAV ================= */
-nav{
-    position:fixed;
-    inset:0 0 auto 0;
-    height:72px;
-    background:rgba(255,255,255,.95);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid #e5e5e5;
-    z-index:1000;
-}
-.nav-content{
-    max-width:1200px;
-    margin:auto;
-    padding:0 24px;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-.logo{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-decoration:none;
-    color:#1a1a1a;
-}
-.logo img{width:40px;height:40px}
-.logo-text{font-size:20px;font-weight:700}
+.download-hero{padding:140px 0 60px;text-align:center;}
+.status-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#f5f5f5;border-radius:8px;font-size:14px;font-weight:600;color:#666;margin-bottom:24px;}
+.status-badge .material-icons{font-size:18px;}
+.download-hero h1{font-size:clamp(40px,7vw,64px);font-weight:700;margin-bottom:20px;color:#fff;}
+.download-hero p{font-size:20px;color:#ccc;max-width:600px;margin:0 auto;}
 
-.nav-links{
-    display:flex;
-    gap:32px;
-}
-.nav-links a{
-    display:flex;
-    gap:6px;
-    align-items:center;
-    text-decoration:none;
-    color:#666;
-    font-weight:500;
-}
-.nav-links a:hover{color:#000}
+.info-box{background:#1a1a1a;color:#fff;border-radius:12px;padding:48px;margin:60px 0;text-align:center;}
+.info-box-icon{font-size:64px;color:#fff;margin-bottom:24px;}
+.info-box h2{font-size:28px;font-weight:700;margin-bottom:16px;color:#fff;}
+.info-box p{font-size:18px;color:#ccc;line-height:1.8;margin-bottom:16px;}
+.price-display{font-size:56px;font-weight:700;color:#fff;margin:32px 0 16px;}
+.price-note{font-size:16px;color:#ccc;}
+.development-section{background:#f9f9f9;border-radius:12px;padding:48px;margin:40px 0;}
+.development-section h3{font-size:24px;font-weight:600;margin-bottom:24px;color:#1a1a1a;}
+.status-list{list-style:none;margin-bottom:32px;}
+.status-item{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid #e5e5e5;}
+.status-item:last-child{border-bottom:none;}
+.status-item .material-icons{color:#1a1a1a;font-size:24px;margin-top:2px;}
+.status-item-content h4{font-size:16px;font-weight:600;margin-bottom:4px;color:#1a1a1a;}
+.status-item-content p{font-size:15px;color:#666;line-height:1.6;}
 
-/* ===== MOBILE BUTTON ===== */
-.menu-btn{
-    display:none;
-    background:none;
-    border:none;
-    cursor:pointer;
-}
-.menu-btn .material-icons{font-size:32px}
+.timeline{background:#fff;border-radius:12px;padding:32px;margin-top:32px;}
+.timeline h4{font-size:18px;font-weight:600;margin-bottom:20px;color:#1a1a1a;}
+.timeline-item{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #e5e5e5;}
+.timeline-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.timeline-date{font-weight:600;color:#1a1a1a;min-width:100px;}
+.timeline-content{color:#666;flex:1;}
 
-/* ===== FULLSCREEN MOBILE MENU ===== */
-.mobile-menu{
-    position:fixed;
-    inset:0;
-    background:#fff;
-    transform:translateY(-100%);
-    transition:transform .4s ease;
-    z-index:2000;
-    display:flex;
-    flex-direction:column;
-}
-.mobile-menu.open{transform:translateY(0)}
-.mobile-menu header{
-    height:72px;
-    padding:0 24px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid #eee;
-}
-.mobile-links{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:32px;
-    padding:32px;
-}
-.mobile-links a{
-    font-size:24px;
-    font-weight:600;
-    color:#1a1a1a;
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
+.btn-group{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:40px;}
+.btn{padding:16px 40px;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn-primary{background:#fff;color:#1a1a1a;}
+.btn-primary:hover{background:#f5f5f5;}
+.btn-secondary{background:transparent;color:#fff;border:2px solid #fff;}
+.btn-secondary:hover{border-color:#ccc;}
 
-/* ================= HERO ================= */
-.download-hero{
-    padding:140px 0 60px;
-    text-align:center;
-}
-.status-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:10px 20px;
-    background:#f5f5f5;
-    border-radius:8px;
-    font-size:14px;
-    font-weight:600;
-    margin-bottom:24px;
-}
-.download-hero h1{
-    font-size:clamp(40px,7vw,64px);
-    letter-spacing:-2px;
-    margin-bottom:20px;
-}
-.download-hero p{
-    font-size:20px;
-    color:#666;
-}
+footer{background:#1a1a1a;color:#fff;padding:40px 0 20px;text-align:center;margin-top:80px;}
+.footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:24px;flex-wrap:wrap;}
+.footer-links a{color:#fff;text-decoration:none;font-size:15px;display:flex;align-items:center;gap:6px;transition:color .2s;}
+.footer-links a:hover{color:#f5f5f5;}
 
-/* ================= CONTENT ================= */
-.info-box{
-    background:#f9f9f9;
-    border:2px solid #e5e5e5;
-    border-radius:12px;
-    padding:48px;
-    margin:60px 0;
-    text-align:center;
-}
-.info-box-icon{font-size:64px;margin-bottom:24px}
-.price-display{
-    font-size:56px;
-    font-weight:700;
-    margin:32px 0 16px;
-}
-
-.development-section{
-    background:#fff;
-    border:1px solid #e5e5e5;
-    border-radius:12px;
-    padding:48px;
-    margin:40px 0;
-}
-.status-item{
-    display:flex;
-    gap:16px;
-    padding:16px 0;
-    border-bottom:1px solid #f5f5f5;
-}
-
-.timeline{
-    background:#f9f9f9;
-    border-radius:12px;
-    padding:32px;
-    margin-top:32px;
-}
-.timeline-item{
-    display:flex;
-    gap:16px;
-    padding-bottom:20px;
-    margin-bottom:20px;
-    border-bottom:1px solid #e5e5e5;
-}
-.timeline-item:last-child{border:none;margin:0;padding:0}
-
-.btn-group{
-    display:flex;
-    gap:16px;
-    justify-content:center;
-    flex-wrap:wrap;
-    margin-top:40px;
-}
-.btn{
-    padding:16px 40px;
-    font-size:16px;
-    font-weight:600;
-    border-radius:8px;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-}
-.btn-primary{background:#1a1a1a;color:#fff}
-.btn-secondary{border:2px solid #e5e5e5;color:#1a1a1a}
-
-/* ================= FOOTER ================= */
-footer{
-    background:#1a1a1a;
-    color:#fff;
-    padding:40px 0 20px;
-    text-align:center;
-    margin-top:80px;
-}
-.footer-links{
-    display:flex;
-    justify-content:center;
-    gap:32px;
-    flex-wrap:wrap;
-}
-
-/* ================= MOBILE ================= */
-@media(max-width:768px){
-    .nav-links{display:none}
-    .menu-btn{display:block}
-    .info-box,.development-section{padding:32px 24px}
-    .btn{width:100%;justify-content:center}
-    .timeline-item{flex-direction:column}
-}
+@media(max-width:768px){.nav-links span{display:none}.btn-group{flex-direction:column}.btn{width:100%;justify-content:center}.timeline-item{flex-direction:column;gap:8px}.timeline-date{min-width:auto}}
 </style>
 </head>
-
 <body>
 <div id="root"></div>
 
 <script type="text/babel">
-const {useState,useEffect}=React;
-
-function DownloadPage(){
-    const [open,setOpen]=useState(false);
-    useEffect(()=>{document.body.style.overflow=open?"hidden":"auto"},[open]);
-
-    return(
+function DownloadPage() {
+  return (
     <>
-        <nav>
-            <div className="nav-content">
-                <a href="index.html" className="logo">
-                    <img src="logo.png"/>
-                    <div className="logo-text">STDK</div>
-                </a>
-
-                <div className="nav-links">
-                    <a href="game.html"><span className="material-icons">sports_esports</span>Game</a>
-                    <a href="about.html"><span className="material-icons">info</span>About</a>
-                </div>
-
-                <button className="menu-btn" onClick={()=>setOpen(true)}>
-                    <span className="material-icons">menu</span>
-                </button>
-            </div>
-        </nav>
-
-        {/* MOBILE MENU */}
-        <div className={`mobile-menu ${open?"open":""}`}>
-            <header>
-                <strong>STDK</strong>
-                <button className="menu-btn" onClick={()=>setOpen(false)}>
-                    <span className="material-icons">close</span>
-                </button>
-            </header>
-            <div className="mobile-links">
-                <a onClick={()=>setOpen(false)} href="index.html"><span className="material-icons">home</span>Home</a>
-                <a onClick={()=>setOpen(false)} href="game.html"><span className="material-icons">sports_esports</span>Game</a>
-                <a onClick={()=>setOpen(false)} href="about.html"><span className="material-icons">info</span>About</a>
-            </div>
+      <nav>
+        <div className="nav-content">
+          <a href="index.html" className="logo">
+            <img src="logo.png" alt="STDK" />
+            <div className="logo-text">STDK</div>
+          </a>
+          <div className="nav-links">
+            <a href="game.html">
+              <span className="material-icons">sports_esports</span>
+              <span>Game</span>
+            </a>
+            <a href="about.html">
+              <span className="material-icons">info</span>
+              <span>About</span>
+            </a>
+          </div>
         </div>
+      </nav>
 
-        <section className="download-hero">
-            <div className="container">
-                <div className="status-badge">
-                    <span className="material-icons">schedule</span>
-                    In Development
+      <section className="download-hero">
+        <div className="container">
+          <div className="status-badge">
+            <span className="material-icons">schedule</span>
+            In Development
+          </div>
+          <h1>Download Subexponential</h1>
+          <p>Alpha demo coming soon - Follow development progress</p>
+        </div>
+      </section>
+
+      <section>
+        <div className="container">
+          <div className="info-box">
+            <span className="material-icons info-box-icon">build_circle</span>
+            <h2>Game in Active Development</h2>
+            <p>Subexponential is currently in active development. The demo alpha is not yet available, but we're working hard to bring you an exciting first-person delivery and smuggling experience.</p>
+            <div className="price-display">FREE</div>
+            <p className="price-note">Demo Alpha Release</p>
+            <p style={{marginTop:'16px', fontSize:'16px'}}>Full game estimated price: <strong>$4-12 USD</strong></p>
+          </div>
+
+          <div className="development-section">
+            <h3>Development Status</h3>
+            <ul className="status-list">
+              <li className="status-item">
+                <span className="material-icons">check_circle</span>
+                <div className="status-item-content">
+                  <h4>Core Mechanics</h4>
+                  <p>First-person driving and delivery systems are being implemented in Godot Engine.</p>
                 </div>
-                <h1>Download Subexponential</h1>
-                <p>Alpha demo coming soon</p>
-            </div>
-        </section>
-
-        <section>
-            <div className="container">
-                <div className="info-box">
-                    <span className="material-icons info-box-icon">build_circle</span>
-                    <h2>Game in Active Development</h2>
-                    <div className="price-display">FREE</div>
-                    <p>Demo Alpha Release</p>
+              </li>
+              <li className="status-item">
+                <span className="material-icons">palette</span>
+                <div className="status-item-content">
+                  <h4>Visual Style</h4>
+                  <p>Low-poly stylized art style is being developed with a focus on performance & Realism.</p>
                 </div>
-
-                <div className="btn-group">
-                    <a href="https://bsky.app/profile/stdkstore.github.io" target="_blank" className="btn btn-primary">
-                        <span className="material-icons">cloud</span>Follow on Bluesky
-                    </a>
-                    <a href="https://stdk.itch.io" target="_blank" className="btn btn-secondary">
-                        <span className="material-icons">videogame_asset</span>itch.io
-                    </a>
+              </li>
+              <li className="status-item">
+                <span className="material-icons">map</span>
+                <div className="status-item-content">
+                  <h4>World Building</h4>
+                  <p>City environment and border crossing systems are in progress.</p>
                 </div>
-            </div>
-        </section>
+              </li>
+              <li className="status-item">
+                <span className="material-icons">tune</span>
+                <div className="status-item-content">
+                  <h4>Gameplay Balance</h4>
+                  <p>Gameplay Mechanics are still being developed</p>
+                </div>
+              </li>
+            </ul>
 
-        <footer>
-            <div className="footer-links">
-                <a href="game.html"><span className="material-icons">sports_esports</span>Game</a>
-                <a href="about.html"><span className="material-icons">info</span>About</a>
+            <div className="timeline">
+              <h4>Development Roadmap [NOT FIXED]</h4>
+              <div className="timeline-item">
+                <div className="timeline-date">2026 Q1</div>
+                <div className="timeline-content">Core mechanics and closed development</div>
+              </div>
+              <div className="timeline-item">
+                <div className="timeline-date">2026 Q2</div>
+                <div className="timeline-content">Alpha demo release on itch.io</div>
+              </div>
+              <div className="timeline-item">
+                <div className="timeline-date">2026 Q3-Q4</div>
+                <div className="timeline-content">Beta testing and community feedback</div>
+              </div>
+              <div className="timeline-item">
+                <div className="timeline-date">2027</div>
+                <div className="timeline-content">Full game release</div>
+              </div>
             </div>
-            <p style={{color:"#666",fontSize:"14px"}}>© 2026 STDK</p>
-        </footer>
+          </div>
+
+          <div className="btn-group">
+            <a href="https://bsky.app/profile/stdkstore.github.io" className="btn btn-primary" target="_blank" rel="noopener">
+              <span className="material-icons">cloud</span>
+              Follow Development on Bluesky
+            </a>
+            <a href="https://stdk.itch.io" className="btn btn-secondary" target="_blank" rel="noopener">
+              <span className="material-icons">videogame_asset</span>
+              Visit itch.io Page
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div className="container">
+          <div className="footer-links">
+            <a href="game.html">
+              <span className="material-icons" style={{fontSize:'18px'}}>sports_esports</span>
+              Game
+            </a>
+            <a href="about.html">
+              <span className="material-icons" style={{fontSize:'18px'}}>info</span>
+              About
+            </a>
+            <a href="https://sketchfab.com/STDK" target="_blank" rel="noopener">
+              <span className="material-icons" style={{fontSize:'18px'}}>view_in_ar</span>
+              Sketchfab
+            </a>
+          </div>
+          <p style={{color:'#666', fontSize:'14px', marginTop:'24px'}}>© 2026 STDK - Studio Kurvik</p>
+        </div>
+      </footer>
     </>
-    )
+  );
 }
 
-ReactDOM.render(<DownloadPage/>,document.getElementById("root"));
+ReactDOM.render(<DownloadPage />, document.getElementById('root'));
 </script>
 </body>
 </html>
